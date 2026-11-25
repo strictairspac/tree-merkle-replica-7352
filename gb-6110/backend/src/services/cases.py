@@ -5,6 +5,7 @@ from sqlalchemy import insert, select
 
 from src.domain import scenario
 from src.models.cases import cases
+from . import replica as replica_store
 from .audit import record
 
 
@@ -28,5 +29,6 @@ def create(db, data, actor):
             raise HTTPException(422, str(exc)) from exc
     change = db.execute(insert(cases).values(**data.model_dump(), code=f"CASE-{uuid4().hex[:12].upper()}", created_by=actor))
     case_id = change.inserted_primary_key[0]
+    replica_store.initialize(db, case_id, data.payload)
     record(db, "create_case", actor, "case", case_id)
     return get(db, case_id)

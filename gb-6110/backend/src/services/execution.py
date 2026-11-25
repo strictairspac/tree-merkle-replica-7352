@@ -8,6 +8,7 @@ from src.constants.job_state import JobState
 from src.domain import scenario
 from src.models.cases import cases
 from src.models.runs import runs
+from src.services import replica as replica_store
 from src.services.audit import record
 from src.utils.serial import content_digest
 
@@ -24,8 +25,15 @@ def service_one():
         if task is None:
             return False
         payload = db.scalar(select(cases.c.payload).where(cases.c.id == task["case_id"]))
+        version = task["replica_version"]
         try:
+            if version is not None:
+                # 按派单时钉定的副本版本取数，收齐切换的新版本不影响已排队批次。
+                payload = {**payload, "replica": replica_store.entries_at(db, task["case_id"], version)}
             result = scenario.run(payload, task["parameter"], db)
+            if version is not None:
+                result["replica_version"] = version
+                result["metrics"]["副本版本"] = f"v{version}"
             output = {"status": JobState.DONE, "result": result, "digest": content_digest(result)}
         except Exception as exc:
             # Let the failed database transaction roll back before persisting the error.

@@ -12,6 +12,7 @@ class RunEntry(BaseModel):
     case_title: str
     status: JobState
     parameter: int
+    replica_version: int | None
     actor: str
     created_at: int
     finished_at: int | None

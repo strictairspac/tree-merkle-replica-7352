@@ -11,5 +11,9 @@ export const api = {
   review: id => request(`/runs/${id}/review`),
   submitReview: (id, data) => request(`/runs/${id}/review`, {method: "POST", data}),
   export: id => request(`/runs/${id}/export`, {raw: true}),
+  replica: id => request(`/cases/${id}/replica`),
+  batches: id => request(`/cases/${id}/batches`),
+  openBatch: (id, data) => request(`/cases/${id}/batches`, {method: "POST", data}),
+  uploadSegment: (id, batch, data) => request(`/cases/${id}/batches/${batch}/segments`, {method: "POST", data}),
   audit: () => request("/audit", {signal: AbortSignal.timeout(5000)}),
 };

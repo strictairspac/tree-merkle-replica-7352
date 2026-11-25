@@ -35,7 +35,7 @@ code { overflow-wrap: anywhere; }
 summary { cursor: pointer; color: var(--accent); }
 [role=alert]:empty { display: none; }
 .boot, .error-screen { margin: clamp(1rem, 6vw, 6rem); }
-.feedback, .state-failed { color: var(--signal); overflow-wrap: anywhere; }
+.feedback, .state-failed, .state-rejected { color: var(--signal); overflow-wrap: anywhere; }
 .login {
   min-height: 100vh; display: grid; grid-template-columns: minmax(0, var(--login-ratio)) minmax(19rem, 2fr);
   align-items: center; padding: clamp(1rem, 7vw, 7.5rem); gap: clamp(1.5rem, 6vw, 6rem);
@@ -51,7 +51,7 @@ summary { cursor: pointer; color: var(--accent); }
 .diagram { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: .6rem; }
 .diagram span { padding: .32rem .7rem; border-inline-start: .18rem solid var(--accent); background: var(--tint); font-size: .88rem; }
 .login-access { padding: clamp(1.3rem, 3vw, 2.8rem); background: var(--surface); border-top: var(--rail-size) solid var(--accent); border-radius: var(--radius); min-width: 0; }
-.login-access form, #case-form, #review-form { display: grid; gap: .85rem; margin: 1.15rem 0; }
+.login-access form, #case-form, #review-form, .sync-form { display: grid; gap: .85rem; margin: 1.15rem 0; }
 .login-access details { margin-top: 1.1rem; font-size: .85rem; }
 .login-access details p { overflow-wrap: anywhere; }
 .field { display: grid; gap: .3rem; font-size: .92rem; min-width: 0; }
@@ -85,7 +85,7 @@ nav a[aria-current=page], nav a:hover { background: var(--rail-highlight); borde
 .queue-form .feedback { width: 100%; }
 .stack { display: grid; gap: .65rem; }
 .status { font-size: .86rem; font-weight: 700; width: fit-content; border-left: .2rem solid currentColor; background: var(--tint); padding: .24rem .56rem; }
-.state-done { color: var(--accent); }
+.state-done, .state-applied { color: var(--accent); }
 .table-scroll { max-width: 100%; max-height: 27rem; overflow: auto; }
 table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .9rem; }
 th, td { padding: .6rem .7rem; vertical-align: top; text-align: left; border-bottom: 1px solid var(--rule); }

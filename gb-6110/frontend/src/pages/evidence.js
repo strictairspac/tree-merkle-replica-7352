@@ -48,7 +48,8 @@ export async function evidencePage(config, user, route) {
   return el("div", {class: "page evidence"},
     pageHeading(config.modules[3], run.case_title, button),
     issue, options,
-    el("section", {class: "feature evidence-summary"}, el("div", {}, el("h2", {}, "批次判定"), el("p", {}, run.result.summary)),
+    el("section", {class: "feature evidence-summary"}, el("div", {}, el("h2", {}, "批次判定"), el("p", {}, run.result.summary),
+        run.replica_version ? el("p", {}, `点验使用巡养副本 v${run.replica_version}`) : null),
       el("details", {}, el("summary", {}, "证据摘要"), el("code", {}, run.digest))),
     el("dl", {class: "metrics"}, Object.entries(run.result.metrics).map(([label, value]) =>
       el("div", {}, el("dt", {}, label), el("dd", {}, cell(value))))),

@@ -8,6 +8,7 @@ runs = Table(
     Column("case_id", ForeignKey("cases.id"), nullable=False, index=True),
     Column("status", String(16), nullable=False, index=True),
     Column("parameter", Integer, nullable=False),
+    Column("replica_version", Integer, nullable=True),
     Column("actor", String(48), nullable=False),
     Column("created_at", BigInteger, nullable=False),
     Column("finished_at", BigInteger, nullable=True),

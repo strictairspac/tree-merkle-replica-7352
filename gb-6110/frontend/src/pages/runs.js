@@ -34,8 +34,9 @@ export async function runsPage(config, route, signal) {
   return el("div", {class: "page"},
     pageHeading(config.modules[2], config.parameter_label),
     latest ? section(latest.case_title, detail) : detail,
-    section("执行批次", items.length ? table(["资料", "编号", "参数", "状态", "提交时间"],
+    section("执行批次", items.length ? table(["资料", "编号", "参数", "副本版本", "状态", "提交时间"],
       items.map(run => [el("a", {"data-run": run.id, href: `#runs/${run.id}`}, run.case_title), run.id,
-        run.parameter, el("span", {"data-run": run.id}, status(run.status)), time(run.created_at)]), "执行批次") :
+        run.parameter, run.replica_version ? `v${run.replica_version}` : "—",
+        el("span", {"data-run": run.id}, status(run.status)), time(run.created_at)]), "执行批次") :
       empty("暂无执行记录。")));
 }

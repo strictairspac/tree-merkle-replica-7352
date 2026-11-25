@@ -7,7 +7,7 @@ from src.constants.job_state import JobState
 from src.domain.scenario import CONFIG
 from src.models.cases import cases
 from src.models.runs import runs
-from . import audit, cases as case_service
+from . import audit, cases as case_service, replica as replica_store
 
 
 def query():
@@ -28,9 +28,15 @@ def list_entries(db):
 def enqueue(db, case_id, parameter, actor):
     if parameter > CONFIG["max_parameter"]:
         raise HTTPException(422, f"参数不能超过 {CONFIG['max_parameter']}")
-    case_service.get(db, case_id)
+    case = case_service.get(db, case_id)
+    # 派单时钉定副本版本：已排队的点验按派单时的副本算。
+    version = replica_store.current_version(db, case_id)
+    if version is None:
+        replica_store.lock_case(db, case_id)
+        version = replica_store.ensure_store(db, case_id, case["payload"])
     change = db.execute(insert(runs).values(
-        case_id=case_id, status=JobState.QUEUED, parameter=parameter, actor=actor, created_at=int(time())
+        case_id=case_id, status=JobState.QUEUED, parameter=parameter, replica_version=version,
+        actor=actor, created_at=int(time())
     ))
     run_id = change.inserted_primary_key[0]
     audit.record(db, "enqueue", actor, "run", run_id)

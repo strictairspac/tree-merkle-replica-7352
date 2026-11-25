@@ -1,6 +1,6 @@
 from redis.exceptions import RedisError
 from src.config.resources import cache, engine
-from src.services import cases, runs, reviews
+from src.services import cases, replica, runs, reviews
 
 
 def new_case(data, user):
@@ -23,3 +23,13 @@ def new_run(case_id, data, user):
 def new_review(run_id, data, user):
     with engine.begin() as db:
         return reviews.sign(db, run_id, data, user["username"])
+
+
+def new_batch(case_id, data, user):
+    with engine.begin() as db:
+        return replica.open_batch(db, case_id, data, user["username"])
+
+
+def new_segment(case_id, batch_id, data, user):
+    with engine.begin() as db:
+        return replica.upload_segment(db, case_id, batch_id, data, user["username"])
